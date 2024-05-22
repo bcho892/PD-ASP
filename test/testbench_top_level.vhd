@@ -27,4 +27,17 @@ begin
         t_clock <= '0';
         wait for 10 ns;
     end process;
+
+    process
+    begin
+        t_data_in.addr <= x"FF";
+        t_data_in.data <= x"80000696";
+        wait until rising_edge(t_clock);
+        t_data_in.data <= x"80000699";
+
+        wait until rising_edge(t_clock);
+        t_data_in.data <= x"80000696";
+
+        wait;
+    end process;
 end architecture;
