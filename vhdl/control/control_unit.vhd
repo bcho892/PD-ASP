@@ -6,20 +6,20 @@ use work.BiglariTypes;
 
 entity control_unit is
     port (
-        clock                     : in  std_logic;
+        clock                         : in  std_logic;
 
         -- prefixed with d to indicate coming from data path
-        d_slope_changed           : in  std_logic;
-        d_reset                   : in  std_logic;
-        d_packet_type             : in  BiglariTypes.packet;
+        d_slope_changed               : in  std_logic;
+        d_reset                       : in  std_logic;
+        d_packet_type                 : in  BiglariTypes.packet;
         -- prefixed with c to indicate control signal
-        c_wipe_data_registers     : out std_logic;
-        c_write_send_register     : out std_logic;
-        c_write_data_buffers      : out std_logic;
-        c_message_select          : out MuxConstants.message_select_width;
-        c_write_min_max_registers : out std_logic;
-        c_write_slope_registers   : out std_logic;
-        c_write_config_registers  : out std_logic
+        c_wipe_data_registers         : out std_logic;
+        c_write_send_register         : out std_logic;
+        c_write_data_buffers          : out std_logic;
+        c_message_select              : out MuxConstants.message_select_width;
+        c_write_min_max_registers     : out std_logic;
+        c_write_correlation_registers : out std_logic;
+        c_write_config_registers      : out std_logic
     );
 end entity;
 
@@ -28,57 +28,60 @@ architecture rtl of control_unit is
     signal current_state : state := waiting;
     signal next_state    : state := waiting;
 
-    procedure SetControlSignals (
-        c_wipe_data_registers_in     : in std_logic;
-        c_write_send_register_in     : in std_logic;
-        c_write_data_buffers_in      : in std_logic;
-        c_message_select_in          : in MuxConstants.message_select_width;
-        c_write_min_max_registers_in : in std_logic;
-        c_write_slope_registers_in   : in std_logic;
-        c_write_config_registers_in  : in std_logic
-    ) is
-    begin
-        c_wipe_data_registers     <= c_wipe_data_registers_in;
-        c_write_send_register     <= c_write_send_register_in;
-        c_write_data_buffers      <= c_write_data_buffers_in;
-        c_message_select          <= c_message_select_in;
-        c_write_min_max_registers <= c_write_min_max_registers_in;
-        c_write_slope_registers   <= c_write_slope_registers_in;
-        c_write_config_registers  <= c_write_config_registers_in;
-    end procedure SetControlSignals;
-
 begin
 
     StateRegister : process (clock, d_reset)
     begin
         if (d_reset = '1') then
-            next_state <= waiting;
-            SetControlSignals('1', '0', '0', MuxConstants.no_message, '0', '0', '0');
+            current_state <= waiting;
         elsif rising_edge(clock) then
             current_state <= next_state;
         end if;
     end process;
 
     Logic : process (current_state, d_slope_changed, d_packet_type)
+
+        procedure SetControlSignals (
+            constant c_wipe_data_registers_in         : in std_logic;
+            constant c_write_send_register_in         : in std_logic;
+            constant c_write_data_buffers_in          : in std_logic;
+            constant c_message_select_in              : in MuxConstants.message_select_width;
+            constant c_write_min_max_registers_in     : in std_logic;
+            constant c_write_correlation_registers_in : in std_logic;
+            constant c_write_config_registers_in      : in std_logic
+        ) is
+        begin
+            c_wipe_data_registers         <= c_wipe_data_registers_in;
+            c_write_send_register         <= c_write_send_register_in;
+            c_write_data_buffers          <= c_write_data_buffers_in;
+            c_message_select              <= c_message_select_in;
+            c_write_min_max_registers     <= c_write_min_max_registers_in;
+            c_write_correlation_registers <= c_write_correlation_registers_in;
+            c_write_config_registers      <= c_write_config_registers_in;
+        end procedure SetControlSignals;
     begin
         -- default is SetControlSignals('0', '0', '0', MuxConstants.no_message, '0', '0', '0');
         case current_state is
+
             when waiting =>
                 if d_slope_changed = '1' then
                     next_state <= send_min_max_information;
                     -- Buffer all data
-                    SetControlSignals('0', '0', '1', MuxConstants.no_message, '0', '0', '0');
+                    SetControlSignals('0', '1', '1', MuxConstants.no_message, '0', '0', '0');
                 else
                     case d_packet_type is
                         when BiglariTypes.config =>
                             next_state <= waiting;
-                            SetControlSignals('0', '0', '0', MuxConstants.no_message, '0', '0', '1');
+                            SetControlSignals('0', '1', '0', MuxConstants.no_message, '0', '0', '1');
                         when BiglariTypes.average_data =>
                             next_state <= waiting;
-                            SetControlSignals('0', '0', '0', MuxConstants.no_message, '1', '0', '0');
+                            SetControlSignals('0', '1', '0', MuxConstants.no_message, '1', '0', '0');
                         when BiglariTypes.correlation_data =>
                             next_state <= waiting;
-                            SetControlSignals('0', '0', '0', MuxConstants.no_message, '0', '1', '0');
+                            SetControlSignals('0', '1', '0', MuxConstants.no_message, '0', '1', '0');
+                        when others =>
+                            SetControlSignals('0', '1', '1', MuxConstants.no_message, '0', '0', '0');
+                            next_state <= waiting;
                     end case;
                 end if;
 
