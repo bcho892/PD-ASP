@@ -8,20 +8,23 @@ entity peak_detection is
         clock            : in  std_logic;
         enable           : in  std_logic;
         reset            : in  std_logic;
-        correlation_data : in  BiglariTypes.data_width;
+        correlation_data : in  BiglariTypes.data_width := (others => '0');
         peak_detected    : out std_logic
     );
 end entity;
 
 architecture rtl of peak_detection is
-    signal previous_correlation                 : BiglariTypes.data_width;
+    signal previous_correlation                 : BiglariTypes.data_width := (others => '0');
     signal previous_positive_slope              : std_logic;
     signal current_positive_slope               : std_logic;
     signal write_previously_increasing_register : std_logic;
     signal flat_gradient                        : std_logic;
+    signal internal_peak_detected               : std_logic;
+    signal not_clock                            : std_logic;
 begin
-
-    peak_detected <= ((previous_positive_slope and not current_positive_slope) and flat_gradient);
+    not_clock              <= not clock;
+    internal_peak_detected <= '0' when enable = '0' else
+                              (previous_positive_slope and not current_positive_slope and flat_gradient);
     flat_gradient <= '1' when previous_correlation /= correlation_data else
                      '0';
 
@@ -30,7 +33,7 @@ begin
     previous_correlation_register : entity work.register_buffer
         generic map(
             width         => BiglariTypes.data_max_width,
-            default_value => '1'
+            default_value => '0'
         )
         port map(
             clock        => clock,
@@ -57,11 +60,11 @@ begin
             width => 1
         )
         port map(
-            clock        => clock,
+            clock        => not_clock,
             reset        => reset,
-            write_enable => write_previously_increasing_register,
-            data_in(0)   => current_positive_slope,
-            data_out(0)  => previous_positive_slope
+            write_enable => enable,
+            data_in(0)   => internal_peak_detected,
+            data_out(0)  => peak_detected
         );
 
     comparator_inst : entity work.comparator

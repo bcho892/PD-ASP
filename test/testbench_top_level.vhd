@@ -2,6 +2,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use work.ZoranTypes;
+use work.NocConstants;
 
 entity testbench_top_level is
 end entity;
@@ -30,13 +31,33 @@ begin
 
     process
     begin
+        -- enable the PD
+        wait until rising_edge(t_clock);
         t_data_in.addr <= x"FF";
-        t_data_in.data <= x"80000696";
+        t_data_in.data <= NocConstants.pd_config_code & x"FFFF000";
         wait until rising_edge(t_clock);
-        t_data_in.data <= x"80000699";
-
+        t_data_in.data <= NocConstants.average_data_code & x"0000420";
         wait until rising_edge(t_clock);
-        t_data_in.data <= x"80000696";
+        t_data_in.data <= NocConstants.correlation_code & x"0000696";
+        wait until rising_edge(t_clock);
+        t_data_in.data <= NocConstants.average_data_code & x"0000069";
+        wait until rising_edge(t_clock);
+        t_data_in.data <= NocConstants.correlation_code & x"0000069";
+        wait until rising_edge(t_clock);
+        -- buffering in here
+        wait until rising_edge(t_clock);
+        wait until falling_edge(t_clock);
+        t_data_in.data <= NocConstants.correlation_code & x"0000699";
+        assert t_data_out.data = NocConstants.min_max_message_code & x"0420069"
+        report "STACK FRAMED - Min Max Message not sending correct values"
+            severity error;
+        wait until rising_edge(t_clock);
+        wait until falling_edge(t_clock);
+        t_data_in.data <= NocConstants.correlation_code & x"0000696";
+        -- 1 cycles to detect peak
+        assert t_data_out.data = NocConstants.peak_info_message_code & x"0000001"
+        report "STACK FRAMED - Peak info Message not sending correct values"
+            severity error;
 
         wait;
     end process;

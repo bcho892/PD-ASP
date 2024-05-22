@@ -31,7 +31,8 @@ begin
 
     register_buffer_inst : entity work.register_buffer
         generic map(
-            width => BiglariTypes.data_max_width
+            default_value => '1',
+            width         => BiglariTypes.data_max_width
         )
         port map(
             clock        => clock,

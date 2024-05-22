@@ -44,7 +44,9 @@ architecture rtl of top_level is
     signal c_write_correlation_registers : std_logic;
     signal c_write_config_registers      : std_logic;
 
+    signal not_clock                     : std_logic;
 begin
+    not_clock                             <= not clock;
 
     with d_packet_type select d_is_config <= '1' when BiglariTypes.config,
                                              '0' when others;
@@ -62,7 +64,7 @@ begin
         port map(
             clock         => clock,
             reset         => reset,
-            enable        => c_write_config_registers,
+            enable        => d_is_config,
             packet        => data_in.data,
             destination   => d_destination,
             next_address  => d_next_address,
@@ -82,7 +84,7 @@ begin
         port map(
             clock                         => clock,
             d_peak_detected               => d_peak_detected,
-            d_enable                      => d_enable,
+            d_enable                      => d_config_enable,
             d_reset                       => d_reset,
             d_packet_type                 => d_packet_type,
             c_wipe_data_registers         => c_wipe_data_registers,
@@ -94,11 +96,11 @@ begin
             c_write_config_registers      => c_write_config_registers
         );
 
-    peak_detection_inst : entity work.peak_detection
+    peak_detection : entity work.peak_detection
         port map(
             clock            => clock,
             enable           => c_write_correlation_registers,
-            reset            => reset,
+            reset            => c_wipe_data_registers,
             correlation_data => d_truncated_value,
             peak_detected    => d_peak_detected
         );

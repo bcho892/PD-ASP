@@ -6,9 +6,9 @@ use work.MuxConstants;
 
 entity bit_truncation is
     port (
-        data_in  : in  BiglariTypes.data_width;
+        data_in  : in  BiglariTypes.data_width := (others => '0');
         sel      : in  MuxConstants.bit_select_width;
-        data_out : out BiglariTypes.data_width
+        data_out : out BiglariTypes.data_width := (others => '0')
     );
 end entity;
 

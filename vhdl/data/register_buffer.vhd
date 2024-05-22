@@ -27,7 +27,7 @@ begin
     process (clock)
     begin
         if reset = '1' then
-            next_data <= (others => '0');
+            next_data <= (others => default_value);
         elsif rising_edge(clock) then
             if write_enable = '1' then
                 next_data <= data_in;

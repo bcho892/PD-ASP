@@ -11,7 +11,7 @@ set wave_patterns {
         /testbench_top_level/top_level_inst/min_value_storage/registered_min_value
         /testbench_top_level/top_level_inst/max_value_storage/registered_max_value
         /testbench_top_level/top_level_inst/packet_decode/packet_type
-        /testbench_top_level/top_level_inst/peak_detection_inst/peak_detected
+        /testbench_top_level/top_level_inst/peak_detection/peak_detected
 }
 
 set wave_radices {
