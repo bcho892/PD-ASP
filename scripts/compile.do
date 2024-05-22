@@ -12,7 +12,7 @@ set library_file_list {
                                            ../vhdl/control/control_unit.vhd
                            }
                            test_library   {
-                                           ../test/testbench_top_level.vhd
+                                           ../test/testbench_control_unit.vhd
                            }
 }
 

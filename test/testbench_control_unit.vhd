@@ -4,10 +4,10 @@ use ieee.numeric_std.all;
 use work.BiglariTypes;
 use work.MuxConstants;
 
-entity testbench_top_level is
+entity testbench_control_unit is
 end entity;
 
-architecture rtl of testbench_top_level is
+architecture rtl of testbench_control_unit is
 
     signal t_clock                         : std_logic;
     signal t_d_slope_changed               : std_logic;
@@ -48,10 +48,13 @@ begin
 
     process
     begin
-        t_d_enable      <= '0';
-        t_d_packet_type <= BiglariTypes.invalid;
+        t_d_reset         <= '1';
+        t_d_enable        <= '0';
+        t_d_slope_changed <= '0';
+        t_d_packet_type   <= BiglariTypes.invalid;
         wait for 69 ns;
 
+        t_d_reset       <= '0';
         t_d_enable      <= '1';
         t_d_packet_type <= BiglariTypes.config;
         wait until rising_edge(t_clock);
