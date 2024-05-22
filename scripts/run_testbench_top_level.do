@@ -42,7 +42,7 @@ set a [if [llength $wave_patterns] {
 }]; list
 
 # run the simulation
-run 650ns
+run 1000ns
 
 # if waves are required
 if [llength $wave_patterns] {
