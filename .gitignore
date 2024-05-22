@@ -31,6 +31,7 @@ wave.do
 # *.sdc # I want those timing files
 
 # ignore Quartus II generated folders
+/quartus/c5_pin_model_dump.txt
 */db/
 */incremental_db/
 */simulation/

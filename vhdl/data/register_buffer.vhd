@@ -24,7 +24,7 @@ architecture arch of register_buffer is
 
 begin
 
-    process (clock)
+    process (clock, reset)
     begin
         if reset = '1' then
             next_data <= (others => default_value);
