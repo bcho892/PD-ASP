@@ -29,7 +29,8 @@ begin
 
     previous_correlation_register : entity work.register_buffer
         generic map(
-            width => BiglariTypes.data_max_width
+            width         => BiglariTypes.data_max_width,
+            default_value => '1'
         )
         port map(
             clock        => clock,
