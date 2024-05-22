@@ -28,6 +28,7 @@ set library_file_list {
                                            ../test/testbench_noc_output_stage.vhd
                                            ../test/testbench_peak_detection.vhd
                                            ../test/testbench_counter.vhd
+                                           ../test/testbench_top_level.vhd
                            }
 }
 

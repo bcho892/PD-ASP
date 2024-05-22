@@ -23,6 +23,7 @@ architecture rtl of top_level is
 
     signal d_destination                 : std_logic_vector(3 downto 0);
     signal d_next_address                : std_logic_vector(3 downto 0);
+    signal d_padded_next_address         : std_logic_vector(7 downto 0);
     signal d_bit_count                   : MuxConstants.bit_select_width;
     signal d_config_enable               : std_logic;
     signal d_config_reset                : std_logic;
@@ -47,8 +48,9 @@ begin
 
     with d_packet_type select d_is_config <= '1' when BiglariTypes.config,
                                              '0' when others;
-    d_reset  <= (d_config_reset and (d_is_config)) or reset;
-    d_enable <= d_config_enable;
+    d_reset               <= (d_config_reset and (d_is_config)) or reset;
+    d_enable              <= d_config_enable;
+    d_padded_next_address <= "0000" & d_next_address;
 
     packet_decode : entity work.packet_decode
         port map(
@@ -147,7 +149,7 @@ begin
             clock                  => clock,
             reset                  => reset,
             write_enable           => c_write_send_register,
-            data_in(39 downto 32)  => d_next_address,
+            data_in(39 downto 32)  => d_padded_next_address,
             data_in(31 downto 0)   => d_selected_message,
             data_out(39 downto 32) => data_out.addr,
             data_out(31 downto 0)  => data_out.data
