@@ -14,16 +14,22 @@ entity peak_detection is
 end entity;
 
 architecture rtl of peak_detection is
-    signal previous_correlation    : BiglariTypes.data_width;
-    signal previous_positive_slope : std_logic;
-    signal current_positive_slope  : std_logic;
+    signal previous_correlation                 : BiglariTypes.data_width;
+    signal previous_positive_slope              : std_logic;
+    signal current_positive_slope               : std_logic;
+    signal write_previously_increasing_register : std_logic;
+    signal flat_gradient                        : std_logic;
 begin
 
-    peak_detected <= (previous_positive_slope = '1') and (current_positive_slope = '0');
+    peak_detected <= ((previous_positive_slope and not current_positive_slope) and flat_gradient);
+    flat_gradient <= '1' when previous_correlation /= correlation_data else
+                     '0';
+
+    write_previously_increasing_register <= enable and current_positive_slope;
 
     previous_correlation_register : entity work.register_buffer
         generic map(
-            width => BiglariTypes.data_width
+            width => BiglariTypes.data_max_width
         )
         port map(
             clock        => clock,
@@ -40,9 +46,21 @@ begin
         port map(
             clock        => clock,
             reset        => reset,
-            write_enable => enable and current_positive_slope,
-            data_in      => correlation_data,
-            data_out     => previous_positive_slope
+            write_enable => write_previously_increasing_register,
+            data_in(0)   => current_positive_slope,
+            data_out(0)  => previous_positive_slope
+        );
+
+    peak_detected_register : entity work.register_buffer
+        generic map(
+            width => 1
+        )
+        port map(
+            clock        => clock,
+            reset        => reset,
+            write_enable => write_previously_increasing_register,
+            data_in(0)   => current_positive_slope,
+            data_out(0)  => previous_positive_slope
         );
 
     comparator_inst : entity work.comparator
