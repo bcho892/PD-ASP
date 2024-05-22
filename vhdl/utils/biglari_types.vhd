@@ -6,5 +6,5 @@ package BiglariTypes is
     type packet is (config, average_data, correlation_data, invalid);
     subtype data_max_width is std_logic_vector(11 downto 0);
     constant counter_max_width : integer := 27;
-    subtype counter_width is std_logic_vector(counter_max_width downto 0);
+    subtype counter_data is unsigned(counter_max_width downto 0);
 end package;

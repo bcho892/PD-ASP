@@ -10,9 +10,11 @@ set library_file_list {
                                            ../vhdl/utils/zoran_types.vhd
                                            ../vhdl/utils/mux_constants.vhd
                                            ../vhdl/control/control_unit.vhd
+                                           ../vhdl/logic/counter.vhd
                            }
                            test_library   {
                                            ../test/testbench_control_unit.vhd
+                                           ../test/testbench_counter.vhd
                            }
 }
 

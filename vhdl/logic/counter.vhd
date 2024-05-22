@@ -8,20 +8,20 @@ entity counter is
         clock    : in  std_logic;
         reset    : in  std_logic;
         enable   : in  std_logic;
-        data_out : out BiglariTypes.counter_width
+        data_out : out BiglariTypes.counter_data
     );
 end entity;
 
 architecture rtl of counter is
 begin
     process (clock)
-        variable next_value : BiglariTypes.counter_width := 0x"0";
+        variable next_value : BiglariTypes.counter_data := (others => '0');
     begin
         if reset = '1' then
-            next_value := 0;
+            next_value := (others => '0');
         elsif rising_edge(clock) then
             if (enable = '1') then
-                next_value := next_value + 0x"1";
+                next_value := next_value + 1;
             else
                 next_value := next_value;
             end if;

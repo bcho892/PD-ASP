@@ -27,6 +27,7 @@
 *example*
 *sopc_*
 *modelsim.ini*
+wave.do
 # *.sdc # I want those timing files
 
 # ignore Quartus II generated folders
