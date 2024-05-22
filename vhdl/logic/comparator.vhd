@@ -6,8 +6,8 @@ use work.BiglariTypes;
 
 entity comparator is
     port (
-        a                : in  BiglariTypes.data_max_width;
-        b                : in  BiglariTypes.data_max_width;
+        a                : in  BiglariTypes.data_width;
+        b                : in  BiglariTypes.data_width;
         a_greater_than_b : out std_logic
     );
 end entity;
