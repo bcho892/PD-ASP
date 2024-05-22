@@ -12,6 +12,7 @@ architecture rtl of testbench_top_level is
     signal t_clock                         : std_logic;
     signal t_d_slope_changed               : std_logic;
     signal t_d_reset                       : std_logic;
+    signal t_d_enable                      : std_logic;
     signal t_d_packet_type                 : BiglariTypes.packet;
     signal t_c_wipe_data_registers         : std_logic;
     signal t_c_write_send_register         : std_logic;
@@ -26,6 +27,7 @@ begin
             clock                         => t_clock,
             d_slope_changed               => t_d_slope_changed,
             d_reset                       => t_d_reset,
+            d_enable                      => t_d_enable,
             d_packet_type                 => t_d_packet_type,
             c_wipe_data_registers         => t_c_wipe_data_registers,
             c_write_send_register         => t_c_write_send_register,
@@ -46,9 +48,11 @@ begin
 
     process
     begin
+        t_d_enable      <= '0';
         t_d_packet_type <= BiglariTypes.invalid;
         wait for 69 ns;
 
+        t_d_enable      <= '1';
         t_d_packet_type <= BiglariTypes.config;
         wait until rising_edge(t_clock);
         assert t_c_write_config_registers = '1'
@@ -125,7 +129,6 @@ begin
         assert t_c_message_select = MuxConstants.no_message and t_c_write_send_register = '1'
         report "STACK FRAMED - message not being wiped from NOC after sends"
             severity error;
-
         wait;
     end process;
 end architecture;

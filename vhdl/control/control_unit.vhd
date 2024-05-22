@@ -10,6 +10,7 @@ entity control_unit is
 
         -- prefixed with d to indicate coming from data path
         d_slope_changed               : in  std_logic;
+        d_enable                      : in  std_logic;
         d_reset                       : in  std_logic;
         d_packet_type                 : in  BiglariTypes.packet;
         -- prefixed with c to indicate control signal
@@ -60,42 +61,46 @@ begin
             c_write_config_registers      <= c_write_config_registers_in;
         end procedure SetControlSignals;
     begin
-        -- default is SetControlSignals('0', '0', '0', MuxConstants.no_message, '0', '0', '0');
-        case current_state is
+        if (d_enable = '1') then
+            -- default is SetControlSignals('0', '0', '0', MuxConstants.no_message, '0', '0', '0');
+            case current_state is
 
-            when waiting =>
-                if d_slope_changed = '1' then
-                    next_state <= send_min_max_information;
-                    -- Buffer all data
-                    SetControlSignals('0', '1', '1', MuxConstants.no_message, '0', '0', '0');
-                else
-                    case d_packet_type is
-                        when BiglariTypes.config =>
-                            next_state <= waiting;
-                            SetControlSignals('0', '1', '0', MuxConstants.no_message, '0', '0', '1');
-                        when BiglariTypes.average_data =>
-                            next_state <= waiting;
-                            SetControlSignals('0', '1', '0', MuxConstants.no_message, '1', '0', '0');
-                        when BiglariTypes.correlation_data =>
-                            next_state <= waiting;
-                            SetControlSignals('0', '1', '0', MuxConstants.no_message, '0', '1', '0');
-                        when others =>
-                            SetControlSignals('0', '1', '1', MuxConstants.no_message, '0', '0', '0');
-                            next_state <= waiting;
-                    end case;
-                end if;
+                when waiting =>
+                    if d_slope_changed = '1' then
+                        next_state <= send_min_max_information;
+                        -- Buffer all data
+                        SetControlSignals('0', '1', '1', MuxConstants.no_message, '0', '0', '0');
+                    else
+                        case d_packet_type is
+                            when BiglariTypes.config =>
+                                next_state <= waiting;
+                                SetControlSignals('0', '1', '0', MuxConstants.no_message, '0', '0', '1');
+                            when BiglariTypes.average_data =>
+                                next_state <= waiting;
+                                SetControlSignals('0', '1', '0', MuxConstants.no_message, '1', '0', '0');
+                            when BiglariTypes.correlation_data =>
+                                next_state <= waiting;
+                                SetControlSignals('0', '1', '0', MuxConstants.no_message, '0', '1', '0');
+                            when others =>
+                                SetControlSignals('0', '1', '1', MuxConstants.no_message, '0', '0', '0');
+                                next_state <= waiting;
+                        end case;
+                    end if;
 
-            when send_min_max_information =>
-                next_state <= send_peak_information;
-                -- Send min max information
-                SetControlSignals('0', '1', '0', MuxConstants.min_max_message, '0', '0', '0');
+                when send_min_max_information =>
+                    next_state <= send_peak_information;
+                    -- Send min max information
+                    SetControlSignals('0', '1', '0', MuxConstants.min_max_message, '0', '0', '0');
 
-            when send_peak_information =>
-                next_state <= waiting;
-                -- send peak information and wipe data regs
-                SetControlSignals('1', '1', '0', MuxConstants.peak_info_message, '0', '0', '0');
+                when send_peak_information =>
+                    next_state <= waiting;
+                    -- send peak information and wipe data regs
+                    SetControlSignals('1', '1', '0', MuxConstants.peak_info_message, '0', '0', '0');
 
-        end case;
+            end case;
+        else
+            SetControlSignals('0', '1', '0', MuxConstants.no_message, '0', '0', '0');
+        end if;
     end process Logic;
 
 end architecture;
