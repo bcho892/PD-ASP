@@ -44,9 +44,7 @@ architecture rtl of top_level is
     signal c_write_correlation_registers : std_logic;
     signal c_write_config_registers      : std_logic;
 
-    signal not_clock                     : std_logic;
 begin
-    not_clock                             <= not clock;
 
     with d_packet_type select d_is_config <= '1' when BiglariTypes.config,
                                              '0' when others;
