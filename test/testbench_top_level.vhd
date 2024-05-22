@@ -34,7 +34,7 @@ begin
         -- enable the PD
         wait until rising_edge(t_clock);
         t_data_in.addr <= x"FF";
-        t_data_in.data <= NocConstants.pd_config_code & x"FFFFFFF";
+        t_data_in.data <= NocConstants.pd_config_code & x"FFF7FFF";
         wait until rising_edge(t_clock);
         t_data_in.data <= NocConstants.average_data_code & x"0000420";
         wait until rising_edge(t_clock);
@@ -104,6 +104,78 @@ begin
 
         wait until rising_edge(t_clock);
         t_data_in.data <= NocConstants.correlation_code & x"0000FA7";
+        wait on t_data_out.data until t_data_out.data = x"00000000" for 1 ns;
+        assert t_data_out.data = x"00000000"
+        report "STACK FRAMED - NOC message not getting reset"
+            severity error;
+
+        wait until rising_edge(t_clock);
+        t_data_in.data <= NocConstants.correlation_code & x"0000FA7";
+        wait on t_data_out.data until t_data_out.data = x"00000000" for 1 ns;
+        assert t_data_out.data = x"00000000"
+        report "STACK FRAMED - NOC message not getting reset"
+            severity error;
+
+        wait until rising_edge(t_clock);
+        t_data_in.data <= NocConstants.average_data_code & x"0000FFC";
+        wait until rising_edge(t_clock);
+        t_data_in.data <= NocConstants.correlation_code & x"0000666";
+
+        wait until rising_edge(t_clock);
+        -- test reset working
+        t_reset        <= '1';
+        t_data_in.data <= NocConstants.correlation_code & x"0000D1C";
+        wait until rising_edge(t_clock);
+        t_data_in.data <= NocConstants.average_data_code & x"0000666";
+        assert t_data_out.data = x"00000000"
+        report "STACK FRAMED - reset_not_working"
+            severity error;
+        wait until rising_edge(t_clock);
+        assert t_data_out.data = x"00000000"
+        report "STACK FRAMED - reset_not_working"
+            severity error;
+        t_data_in.data <= NocConstants.average_data_code & x"0000069";
+
+        assert t_data_out.data = x"00000000"
+        report "STACK FRAMED - reset_not_working"
+            severity error;
+        wait until rising_edge(t_clock);
+        t_data_in.data <= NocConstants.correlation_code & x"0000669";
+        assert t_data_out.data = x"00000000"
+        report "STACK FRAMED - reset_not_working"
+            severity error;
+
+        t_reset        <= '0';
+        t_data_in.data <= NocConstants.pd_config_code & x"FFF7FFF";
+        -- reconfigure
+        wait until rising_edge(t_clock);
+        -- undo reset and previous should work
+        t_data_in.data <= NocConstants.average_data_code & x"0000420";
+        wait until rising_edge(t_clock);
+        t_data_in.data <= NocConstants.correlation_code & x"0000696";
+        wait until rising_edge(t_clock);
+        t_data_in.data <= NocConstants.average_data_code & x"0000069";
+        wait until rising_edge(t_clock);
+        t_data_in.data <= NocConstants.correlation_code & x"0000069";
+        wait until rising_edge(t_clock);
+        -- buffering in here
+        wait until rising_edge(t_clock);
+        t_data_in.data <= NocConstants.correlation_code & x"0000699";
+        wait on t_data_out.data until t_data_out.data = NocConstants.min_max_message_code & x"0420069" for 1 ns;
+        assert t_data_out.data = NocConstants.min_max_message_code & x"0420069"
+        report "STACK FRAMED - Min Max Message not sending correct values"
+            severity error;
+
+        wait until rising_edge(t_clock);
+        t_data_in.data <= NocConstants.correlation_code & x"0000042";
+        -- weird delta cycle thing going on
+        wait on t_data_out.data until t_data_out.data = NocConstants.peak_info_message_code & x"0000001" for 1 ns;
+        assert t_data_out.data = NocConstants.peak_info_message_code & x"0000001"
+        report "STACK FRAMED - Peak info Message not sending correct values"
+            severity error;
+
+        wait until rising_edge(t_clock);
+        t_data_in.data <= NocConstants.correlation_code & x"0000069";
         wait on t_data_out.data until t_data_out.data = x"00000000" for 1 ns;
         assert t_data_out.data = x"00000000"
         report "STACK FRAMED - NOC message not getting reset"
