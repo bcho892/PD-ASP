@@ -12,7 +12,8 @@ end entity;
 
 architecture beh of packet_decode is
 begin
-    with packet_code select packet_type <= BiglariTypes.average_data when 0x"A",
-                                           BiglariTypes.config when 0x"B",
-                                           BiglariTypes.correlation_data when 0x"C";
+    with packet_code select packet_type <= BiglariTypes.average_data when x"A",
+                                           BiglariTypes.config when x"B",
+                                           BiglariTypes.correlation_data when x"C",
+                                           BiglariTypes.config when others;
 end architecture;

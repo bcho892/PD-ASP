@@ -3,6 +3,7 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use work.ZoranTypes;
 use work.BiglariTypes;
+use work.MuxConstants;
 
 entity top_level is
 
@@ -15,95 +16,141 @@ entity top_level is
 end entity;
 
 architecture rtl of top_level is
-    signal packet_type    : BiglariTypes.packet;
-    signal internal_reset : std_logic;
-    signal is_config      : std_logic;
+    signal d_peak_detected               : std_logic;
+    signal d_enable                      : std_logic;
+    signal d_reset                       : std_logic;
+    signal d_packet_type                 : BiglariTypes.packet;
+
+    signal d_destination                 : std_logic_vector(3 downto 0);
+    signal d_next_address                : std_logic_vector(3 downto 0);
+    signal d_bit_count                   : MuxConstants.bit_select_width;
+    signal d_config_enable               : std_logic;
+    signal d_config_reset                : std_logic;
+
+    signal d_is_config                   : std_logic;
+
+    signal d_min_value                   : BiglariTypes.data_width;
+    signal d_max_value                   : BiglariTypes.data_width;
+    signal d_counter_value               : BiglariTypes.counter_width;
+    signal d_truncated_value             : BiglariTypes.data_width;
+    signal d_selected_message            : ZoranTypes.tdma_min_data;
+
+    signal c_wipe_data_registers         : std_logic;
+    signal c_write_send_register         : std_logic;
+    signal c_write_data_buffers          : std_logic;
+    signal c_message_select              : MuxConstants.bit_select_width;
+    signal c_write_min_max_registers     : std_logic;
+    signal c_write_correlation_registers : std_logic;
+    signal c_write_config_registers      : std_logic;
+
 begin
-    with packet_type select is_config <= '1' when BiglariTypes.config,
-                                         '0' when others;
 
-    internal_reset <= (data_in.data(15) and is_config) or reset;
+    with d_packet_type select d_is_config <= '1' when BiglariTypes.config,
+                                             '0' when others;
+    d_reset  <= (d_config_reset and (d_is_config)) or reset;
+    d_enable <= d_config_enable;
 
-    packet_decode_inst : entity work.packet_decode
+    packet_decode : entity work.packet_decode
         port map(
             packet_code => data_in.data(31 downto 28),
-            packet_type => packet_type
+            packet_type => d_packet_type
         );
 
-    destination_config_register : entity work.register_buffer
-        generic map(
-            width => 4
-        )
+    config_registers : entity work.config_registers
         port map(
-            clock        => clock,
-            reset        => reset,
-            write_enable => packet_type = BiglariTypes.config,
-            data_in      => data_in.data(27 downto 24),
-            data_out     => data_out
-        );
-
-    next_config_register : entity work.register_buffer
-        generic map(
-            width => 4
-        )
-        port map(
-            clock        => clock,
-            reset        => reset,
-            write_enable => packet_type = BiglariTypes.config,
-            data_in      => data_in.data(23 downto 20),
-            data_out     => data_out
-        );
-
-    bit_count_register : entity work.register_buffer
-        generic map(
-            width => 2
-        )
-        port map(
-            clock        => clock,
-            reset        => reset,
-            write_enable => packet_type = BiglariTypes.config,
-            data_in      => data_in.data(19 downto 18),
-            data_out     => data_out
-        );
-
-    enable_register : entity work.register_buffer
-        generic map(
-            width => 1
-        )
-        port map(
-            clock        => clock,
-            reset        => reset,
-            write_enable => packet_type = BiglariTypes.config,
-            data_in      => data_in.data(17 downto 17),
-            data_out     => data_out
+            clock         => clock,
+            reset         => reset,
+            enable        => c_write_config_registers,
+            packet        => data_in.data,
+            destination   => d_destination,
+            next_address  => d_next_address,
+            bit_count     => d_bit_count,
+            config_enable => d_config_enable,
+            config_reset  => d_config_reset
         );
 
     data_truncation_mux : entity work.bit_truncation
         port map(
             data_in  => data_in.data(11 downto 0),
-            sel      => sel,
-            data_out => data_out
+            sel      => d_bit_count,
+            data_out => d_truncated_value
         );
 
-    max_value_comparator : entity work.comparator
+    control_unit : entity work.control_unit
         port map(
-            a                => a,
-            b                => b,
-            a_greater_than_b => a_greater_than_b
+            clock                         => clock,
+            d_peak_detected               => d_peak_detected,
+            d_enable                      => d_enable,
+            d_reset                       => d_reset,
+            d_packet_type                 => d_packet_type,
+            c_wipe_data_registers         => c_wipe_data_registers,
+            c_write_send_register         => c_write_send_register,
+            c_write_data_buffers          => c_write_data_buffers,
+            c_message_select              => c_message_select,
+            c_write_min_max_registers     => c_write_min_max_registers,
+            c_write_correlation_registers => c_write_correlation_registers,
+            c_write_config_registers      => c_write_config_registers
         );
 
-    min_value_comparator : entity work.comparator
+    peak_detection_inst : entity work.peak_detection
         port map(
-            a                => a,
-            b                => b,
-            a_greater_than_b => a_greater_than_b
+            clock            => clock,
+            enable           => c_write_correlation_registers,
+            reset            => reset,
+            correlation_data => d_truncated_value,
+            peak_detected    => d_peak_detected
         );
 
-    rising_edge_comparator : entity work.comparator
+    counter : entity work.counter
         port map(
-            a                => a,
-            b                => b,
-            a_greater_than_b => a_greater_than_b
+            clock    => clock,
+            reset    => reset,
+            enable   => c_write_correlation_registers,
+            data_out => d_counter_value
+        );
+
+    min_value_storage : entity work.min_value_storage
+        port map(
+            clock             => clock,
+            reset             => c_wipe_data_registers,
+            enable            => c_write_min_max_registers,
+            average_data      => d_truncated_value,
+            current_min_value => d_min_value
+        );
+
+    max_value_storage : entity work.max_value_storage
+        port map(
+            clock             => clock,
+            reset             => c_wipe_data_registers,
+            enable            => c_write_min_max_registers,
+            average_data      => d_truncated_value,
+            current_max_value => d_max_value
+        );
+
+    noc_output_stage : entity work.noc_output_stage
+        port map(
+            clock          => clock,
+            reset          => reset,
+            enable         => c_write_data_buffers,
+            max_value      => d_max_value,
+            min_value      => d_min_value,
+            counter_value  => d_counter_value,
+            message_select => c_message_select,
+            message_out    => d_selected_message
+        );
+
+    send_buffer : entity work.register_buffer
+        generic map(
+            width => 40
+        )
+        port map(
+            clock                  => clock,
+            reset                  => reset,
+            write_enable           => c_write_send_register,
+            data_in(39 downto 32)  => d_next_address,
+            data_in(31 downto 0)   => d_selected_message,
+            data_out(39 downto 32) => data_out.addr,
+            data_out(31 downto 0)  => data_out.data
         );
 
 end architecture;

@@ -25,7 +25,7 @@ begin
     DUT : entity work.control_unit
         port map(
             clock                         => t_clock,
-            d_slope_changed               => t_d_slope_changed,
+            d_peak_detected               => t_d_slope_changed,
             d_reset                       => t_d_reset,
             d_enable                      => t_d_enable,
             d_packet_type                 => t_d_packet_type,

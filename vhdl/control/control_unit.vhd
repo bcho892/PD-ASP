@@ -9,7 +9,7 @@ entity control_unit is
         clock                         : in  std_logic;
 
         -- prefixed with d to indicate coming from data path
-        d_slope_changed               : in  std_logic;
+        d_peak_detected               : in  std_logic;
         d_enable                      : in  std_logic;
         d_reset                       : in  std_logic;
         d_packet_type                 : in  BiglariTypes.packet;
@@ -40,7 +40,7 @@ begin
         end if;
     end process;
 
-    Logic : process (current_state, d_slope_changed, d_packet_type)
+    Logic : process (current_state, d_peak_detected, d_packet_type)
 
         procedure SetControlSignals (
             constant c_wipe_data_registers_in         : in std_logic;
@@ -66,7 +66,7 @@ begin
             case current_state is
 
                 when waiting =>
-                    if d_slope_changed = '1' then
+                    if d_peak_detected = '1' then
                         next_state <= send_min_max_information;
                         -- Buffer all data
                         SetControlSignals('0', '1', '1', MuxConstants.no_message, '0', '0', '0');

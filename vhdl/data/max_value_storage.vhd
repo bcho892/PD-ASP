@@ -13,13 +13,14 @@ entity max_value_storage is
     );
 end entity;
 
-architecture rtl of min_value_storage is
+architecture rtl of max_value_storage is
     signal registered_max_value : BiglariTypes.data_width;
     signal new_max_value_found  : std_logic;
+    signal internal_enable      : std_logic;
 begin
 
-    current_min_value <= registered_max_value;
-
+    current_max_value <= registered_max_value;
+    internal_enable   <= enable and new_max_value_found;
     max_value_comparator : entity work.comparator
         port map(
             a                => average_data,
@@ -27,14 +28,14 @@ begin
             a_greater_than_b => new_max_value_found
         );
 
-    register_buffer_inst : entity work.register_buffer
+    max_value_register : entity work.register_buffer
         generic map(
             width => BiglariTypes.data_max_width
         )
         port map(
             clock        => clock,
             reset        => reset,
-            write_enable => enable and new_max_value_found,
+            write_enable => internal_enable,
             data_in      => average_data,
             data_out     => registered_max_value
         );

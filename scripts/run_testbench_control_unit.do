@@ -14,7 +14,7 @@ set wave_patterns {
         DUT/c_write_send_register
         DUT/clock
         DUT/d_reset
-        DUT/d_slope_changed
+        DUT/d_peak_detected
         t_d_enable
 }
 

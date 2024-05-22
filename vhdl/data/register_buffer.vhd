@@ -5,7 +5,7 @@ use IEEE.numeric_std.all;
 
 entity register_buffer is
     generic (
-        width         : integer range 0 to 32;
+        width         : integer range 0 to 40;
         default_value : std_logic := '0'
     );
     port (

@@ -12,10 +12,16 @@ set library_file_list {
                                            ../vhdl/utils/noc_constants.vhd
                                            ../vhdl/data/register_buffer.vhd
                                            ../vhdl/logic/comparator.vhd
+                                           ../vhdl/data/max_value_storage.vhd
+                                           ../vhdl/data/min_value_storage.vhd
+                                           ../vhdl/logic/bit_truncation.vhd
+                                           ../vhdl/control/packet_decode.vhd
+                                           ../vhdl/data/config_registers.vhd
                                            ../vhdl/logic/counter.vhd
                                            ../vhdl/control/control_unit.vhd
                                            ../vhdl/data/noc_output_stage.vhd
                                            ../vhdl/logic/peak_detection.vhd
+                                           ../vhdl/top_level.vhd
                            }
                            test_library   {
                                            ../test/testbench_control_unit.vhd

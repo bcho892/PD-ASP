@@ -16,8 +16,10 @@ end entity;
 architecture rtl of min_value_storage is
     signal registered_min_value : BiglariTypes.data_width;
     signal new_min_value_found  : std_logic;
+    signal internal_enable      : std_logic;
 begin
 
+    internal_enable   <= enable and new_min_value_found;
     current_min_value <= registered_min_value;
 
     max_value_comparator : entity work.comparator
@@ -34,7 +36,7 @@ begin
         port map(
             clock        => clock,
             reset        => reset,
-            write_enable => enable and new_min_value_found,
+            write_enable => internal_enable,
             data_in      => average_data,
             data_out     => registered_min_value
         );
