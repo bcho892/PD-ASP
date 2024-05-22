@@ -4,16 +4,16 @@ use ieee.numeric_std.all;
 use work.ZoranTypes;
 use work.NocConstants;
 
-entity testbench_top_level is
+entity testbench_top_level_pd_asp is
 end entity;
 
-architecture rtl of testbench_top_level is
+architecture rtl of testbench_top_level_pd_asp is
     signal t_clock    : std_logic;
     signal t_reset    : std_logic;
     signal t_data_in  : ZoranTypes.tdma_min_port;
     signal t_data_out : ZoranTypes.tdma_min_port;
 begin
-    top_level_inst : entity work.top_level
+    top_level_inst : entity work.top_level_pd_asp
         port map(
             clock    => t_clock,
             reset    => t_reset,

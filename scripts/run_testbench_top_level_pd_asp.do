@@ -1,17 +1,17 @@
 puts {
     biglari peak detector TOP LEVEL integration test
 }
-set top_level              test_library.testbench_top_level
+set top_level              test_library.testbench_top_level_pd_asp
 set wave_patterns {
-        /testbench_top_level/top_level_inst/control_unit/current_state
-        /testbench_top_level/t_clock
-        /testbench_top_level/t_data_in
-        /testbench_top_level/t_data_out
-        /testbench_top_level/t_reset
-        /testbench_top_level/top_level_inst/min_value_storage/registered_min_value
-        /testbench_top_level/top_level_inst/max_value_storage/registered_max_value
-        /testbench_top_level/top_level_inst/packet_decode/packet_type
-        /testbench_top_level/top_level_inst/peak_detection/peak_detected
+        top_level_inst/control_unit/current_state
+        t_clock
+        t_data_in
+        t_data_out
+        t_reset
+        top_level_inst/min_value_storage/registered_min_value
+        top_level_inst/max_value_storage/registered_max_value
+        top_level_inst/packet_decode/packet_type
+        top_level_inst/peak_detection/peak_detected
 }
 
 set wave_radices {

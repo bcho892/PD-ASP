@@ -21,14 +21,14 @@ set library_file_list {
                                            ../vhdl/control/control_unit.vhd
                                            ../vhdl/data/noc_output_stage.vhd
                                            ../vhdl/logic/peak_detection.vhd
-                                           ../vhdl/top_level.vhd
+                                           ../vhdl/top_level_pd_asp.vhd
                            }
                            test_library   {
                                            ../test/testbench_control_unit.vhd
                                            ../test/testbench_noc_output_stage.vhd
                                            ../test/testbench_peak_detection.vhd
                                            ../test/testbench_counter.vhd
-                                           ../test/testbench_top_level.vhd
+                                           ../test/testbench_top_level_pd_asp.vhd
                            }
 }
 

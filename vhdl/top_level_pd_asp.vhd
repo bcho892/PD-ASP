@@ -5,7 +5,7 @@ use work.ZoranTypes;
 use work.BiglariTypes;
 use work.MuxConstants;
 
-entity top_level is
+entity top_level_pd_asp is
 
     port (
         clock    : in  std_logic;
@@ -15,7 +15,7 @@ entity top_level is
     );
 end entity;
 
-architecture rtl of top_level is
+architecture rtl of top_level_pd_asp is
     signal d_peak_detected               : std_logic;
     signal d_enable                      : std_logic;
     signal d_reset                       : std_logic;
@@ -42,6 +42,7 @@ architecture rtl of top_level is
     signal c_message_select              : MuxConstants.bit_select_width;
     signal c_write_min_max_registers     : std_logic;
     signal c_write_correlation_registers : std_logic;
+    -- Experimental
     signal c_write_config_registers      : std_logic;
 
 begin
