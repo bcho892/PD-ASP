@@ -11,7 +11,7 @@ architecture rtl of testbench_counter is
     signal t_clock    : std_logic;
     signal t_reset    : std_logic := '0';
     signal t_enable   : std_logic := '1';
-    signal t_data_out : BiglariTypes.counter_data;
+    signal t_data_out : BiglariTypes.counter_width;
 
 begin
     counter_inst : entity work.counter

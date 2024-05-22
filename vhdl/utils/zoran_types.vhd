@@ -16,6 +16,4 @@ package ZoranTypes is
     type tdma_min_datas is array (natural range <>) of tdma_min_data;
     type tdma_min_ports is array (natural range <>) of tdma_min_port;
 
-    function log2Ceil(x : positive) return natural;
-
 end package;

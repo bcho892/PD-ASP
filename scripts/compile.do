@@ -9,14 +9,17 @@ set library_file_list {
                                            ../vhdl/utils/biglari_types.vhd
                                            ../vhdl/utils/zoran_types.vhd
                                            ../vhdl/utils/mux_constants.vhd
+                                           ../vhdl/utils/noc_constants.vhd
                                            ../vhdl/data/register_buffer.vhd
                                            ../vhdl/logic/comparator.vhd
                                            ../vhdl/logic/counter.vhd
                                            ../vhdl/control/control_unit.vhd
+                                           ../vhdl/data/noc_output_stage.vhd
                                            ../vhdl/logic/peak_detection.vhd
                            }
                            test_library   {
                                            ../test/testbench_control_unit.vhd
+                                           ../test/testbench_noc_output_stage.vhd
                                            ../test/testbench_peak_detection.vhd
                                            ../test/testbench_counter.vhd
                            }

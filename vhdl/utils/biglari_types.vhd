@@ -7,5 +7,5 @@ package BiglariTypes is
     constant data_max_width : integer := 12;
     subtype data_width is std_logic_vector(data_max_width - 1 downto 0);
     constant counter_max_width : integer := 28;
-    subtype counter_data is unsigned(counter_max_width - 1 downto 0);
+    subtype counter_width is unsigned(counter_max_width - 1 downto 0);
 end package;
