@@ -1,0 +1,12 @@
+{
+  "[vhdl]": {
+    "editor.defaultFormatter": "HaarigerHarald.vhdl-formatter-pp"
+  },
+  "vhdl.formatter.indentation": "    ",
+  "vhdl.formatter.align.all": true,
+  "vhdl.formatter.align.mode": "Global",
+  "vhdl.formatter.case.typename": "LowerCase",
+  "vhdl.formatter.case.keyword": "LowerCase",
+  "vhdl.formatter.newline.generic": "NoNewLine",
+  "vhdl.formatter.newline.port": "NoNewLine"
+}
