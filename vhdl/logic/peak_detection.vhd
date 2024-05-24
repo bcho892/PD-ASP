@@ -7,7 +7,9 @@ entity peak_detection is
     port (
         clock            : in  std_logic;
         enable           : in  std_logic;
+        -- From Control Unit
         reset            : in  std_logic;
+        data_reset       : in  std_logic;
         correlation_data : in  BiglariTypes.data_width := (others => '0');
         peak_detected    : out std_logic
     );
@@ -37,7 +39,7 @@ begin
         )
         port map(
             clock        => clock,
-            reset        => reset,
+            reset        => data_reset,
             write_enable => enable,
             data_in      => correlation_data,
             data_out     => previous_correlation

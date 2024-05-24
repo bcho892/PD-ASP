@@ -100,6 +100,7 @@ begin
             clock            => clock,
             enable           => c_write_correlation_registers,
             reset            => c_wipe_data_registers,
+            data_reset       => d_reset,
             correlation_data => d_truncated_value,
             peak_detected    => d_peak_detected
         );

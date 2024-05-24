@@ -156,31 +156,57 @@ begin
         wait until rising_edge(t_clock);
         t_data_in.data <= NocConstants.average_data_code & x"0000069";
         wait until rising_edge(t_clock);
-        t_data_in.data <= NocConstants.correlation_code & x"0000069";
-        wait until rising_edge(t_clock);
         -- buffering in here
         wait until rising_edge(t_clock);
         t_data_in.data <= NocConstants.correlation_code & x"0000699";
+
+        wait until rising_edge(t_clock);
+        t_data_in.data <= NocConstants.correlation_code & x"0000099";
+
+        wait until rising_edge(t_clock);
+
+        -- weird delta cycle thing going on
+        t_data_in.data <= NocConstants.correlation_code & x"0000069";
+        wait until rising_edge(t_clock);
+
         wait on t_data_out.data until t_data_out.data = NocConstants.min_max_message_code & x"0420069" for 1 ns;
         assert t_data_out.data = NocConstants.min_max_message_code & x"0420069"
         report "STACK FRAMED - Min Max Message not sending correct values"
             severity error;
-
+        t_data_in.data <= NocConstants.correlation_code & x"0000010";
         wait until rising_edge(t_clock);
-        t_data_in.data <= NocConstants.correlation_code & x"0000042";
-        -- weird delta cycle thing going on
-        wait on t_data_out.data until t_data_out.data = NocConstants.peak_info_message_code & x"0000001" for 1 ns;
-        assert t_data_out.data = NocConstants.peak_info_message_code & x"0000001"
+
+        wait on t_data_out.data until t_data_out.data = NocConstants.peak_info_message_code & x"0000002" for 1 ns;
+        assert t_data_out.data = NocConstants.peak_info_message_code & x"0000002"
         report "STACK FRAMED - Peak info Message not sending correct values"
             severity error;
-
+        t_data_in.data <= NocConstants.correlation_code & x"0000080";
         wait until rising_edge(t_clock);
-        t_data_in.data <= NocConstants.correlation_code & x"0000069";
+
         wait on t_data_out.data until t_data_out.data = x"00000000" for 1 ns;
         assert t_data_out.data = x"00000000"
         report "STACK FRAMED - NOC message not getting reset"
             severity error;
-
+        t_data_in.data <= NocConstants.correlation_code & x"0000020"; -- (2)
+        wait until rising_edge(t_clock);
+        t_data_in.data <= NocConstants.correlation_code & x"0000010"; -- (3)
+        wait until rising_edge(t_clock);
+        t_data_in.data <= NocConstants.correlation_code & x"0000020";-- (4)
+        wait until rising_edge(t_clock);
+        t_data_in.data <= NocConstants.correlation_code & x"0000030";-- (5)
+        wait until rising_edge(t_clock);
+        t_data_in.data <= NocConstants.correlation_code & x"0000050";-- (6)
+        wait until rising_edge(t_clock);
+        t_data_in.data <= NocConstants.correlation_code & x"0000020";-- (7)
+        wait until rising_edge(t_clock);
+        -- buffering
+        wait until rising_edge(t_clock);
+        -- sending max value, we don't care
+        wait until rising_edge(t_clock);
+        wait on t_data_out.data until t_data_out.data = NocConstants.peak_info_message_code & x"0000001" for 1 ns;
+        assert t_data_out.data = NocConstants.peak_info_message_code & x"0000007" -- it took 7 cycles to get here
+        report "STACK FRAMED - Peak info Message not sending correct values"
+            severity error;
         wait;
     end process;
 end architecture;

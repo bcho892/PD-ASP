@@ -11,6 +11,7 @@ architecture rtl of testbench_peak_detection is
     signal t_clock            : std_logic;
     signal t_enable           : std_logic               := '1';
     signal t_reset            : std_logic               := '0';
+    signal t_data_reset       : std_logic               := '0';
     signal t_correlation_data : BiglariTypes.data_width := x"000";
     signal t_peak_detected    : std_logic;
 begin
@@ -19,6 +20,7 @@ begin
             clock            => t_clock,
             enable           => t_enable,
             reset            => t_reset,
+            data_reset       => t_data_reset,
             correlation_data => t_correlation_data,
             peak_detected    => t_peak_detected
         );
