@@ -32,7 +32,7 @@ begin
 
     write_previously_increasing_register <= enable and current_positive_slope;
 
-    previous_correlation_register : entity work.register_buffer
+    previous_correlation_register : entity work.pd_asp_register_buffer
         generic map(
             width         => BiglariTypes.data_max_width,
             default_value => '0'
@@ -45,7 +45,7 @@ begin
             data_out     => previous_correlation
         );
 
-    previously_increasing_register : entity work.register_buffer
+    previously_increasing_register : entity work.pd_asp_register_buffer
         generic map(
             width => 1
         )
@@ -57,7 +57,7 @@ begin
             data_out(0)  => previous_positive_slope
         );
 
-    peak_detected_register : entity work.register_buffer
+    peak_detected_register : entity work.pd_asp_register_buffer
         generic map(
             width => 1
         )

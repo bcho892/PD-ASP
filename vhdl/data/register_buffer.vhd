@@ -3,7 +3,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use IEEE.numeric_std.all;
 
-entity register_buffer is
+entity pd_asp_register_buffer is
     generic (
         width         : integer range 0 to 40;
         default_value : std_logic := '0'
@@ -16,9 +16,9 @@ entity register_buffer is
         data_in      : in  std_logic_vector(width - 1 downto 0);
         data_out     : out std_logic_vector(width - 1 downto 0)
     );
-end register_buffer;
+end pd_asp_register_buffer;
 
-architecture arch of register_buffer is
+architecture arch of pd_asp_register_buffer is
 
     signal next_data : std_logic_vector(width - 1 downto 0) := (others => default_value);
 

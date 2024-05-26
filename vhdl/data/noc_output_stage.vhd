@@ -34,7 +34,7 @@ begin
                           x"00000000" when others;
 
     min_max_message <= NocConstants.min_max_message_code & x"0" & max_value & min_value;
-    min_max_message_buffer : entity work.register_buffer
+    min_max_message_buffer : entity work.pd_asp_register_buffer
         generic map(
             width => 32
         )
@@ -48,7 +48,7 @@ begin
 
     peak_information_message <= NocConstants.peak_info_message_code & std_logic_vector(counter_value);
 
-    peak_information_message_buffer : entity work.register_buffer
+    peak_information_message_buffer : entity work.pd_asp_register_buffer
         generic map(
             width => 32
         )

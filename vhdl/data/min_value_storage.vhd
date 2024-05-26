@@ -29,7 +29,7 @@ begin
             a_greater_than_b => new_min_value_found
         );
 
-    register_buffer_inst : entity work.register_buffer
+    register_buffer_inst : entity work.pd_asp_register_buffer
         generic map(
             default_value => '1',
             width         => BiglariTypes.data_max_width

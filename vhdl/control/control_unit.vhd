@@ -4,7 +4,7 @@ use ieee.numeric_std.all;
 use work.MuxConstants;
 use work.BiglariTypes;
 
-entity control_unit is
+entity pd_asp_control_unit is
     port (
         clock                         : in  std_logic;
 
@@ -24,7 +24,7 @@ entity control_unit is
     );
 end entity;
 
-architecture rtl of control_unit is
+architecture rtl of pd_asp_control_unit is
     type state is (waiting, send_min_max_information, send_peak_information);
     signal current_state : state := waiting;
     signal next_state    : state := waiting;
