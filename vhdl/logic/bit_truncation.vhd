@@ -15,7 +15,7 @@ end entity;
 architecture behaviour of bit_truncation is
 begin
     with sel select data_out <= data_in when MuxConstants.bits_12,
-                                "00" & data_in(9 downto 0) when MuxConstants.bits_10,
-                                "0000" & data_in(7 downto 0) when MuxConstants.bits_8,
+                                -- "00" & data_in(9 downto 0) when MuxConstants.bits_10,
+                                -- "0000" & data_in(7 downto 0) when MuxConstants.bits_8,
                                 data_in when others;
 end architecture;

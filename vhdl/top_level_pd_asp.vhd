@@ -75,7 +75,7 @@ begin
 
     data_truncation_mux : entity work.bit_truncation
         port map(
-            data_in  => data_in.data(11 downto 0),
+            data_in  => data_in.data(15 downto 0),
             sel      => d_bit_count,
             data_out => d_truncated_value
         );

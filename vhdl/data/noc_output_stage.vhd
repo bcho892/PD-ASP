@@ -33,7 +33,7 @@ begin
                           buffered_peak_information_message when MuxConstants.peak_info_message,
                           x"00000000" when others;
 
-    min_max_message <= NocConstants.min_max_message_code & x"0" & max_value & min_value;
+    min_max_message <= NocConstants.min_max_message_code & x"0" & max_value(11 downto 0) & min_value(11 downto 0);
     min_max_message_buffer : entity work.pd_asp_register_buffer
         generic map(
             width => 32
