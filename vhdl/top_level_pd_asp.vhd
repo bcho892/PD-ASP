@@ -10,8 +10,8 @@ entity top_level_pd_asp is
     port (
         clock    : in  std_logic;
         reset    : in  std_logic;
-        data_in  : in  ZoranTypes.tdma_min_port;
-        data_out : out ZoranTypes.tdma_min_port
+        data_in  : in  ZoranTypes.mips_tdma_min_port;
+        data_out : out ZoranTypes.mips_tdma_min_port
     );
 end entity;
 
@@ -74,12 +74,12 @@ begin
 
     data_truncation_mux : entity work.bit_truncation
         port map(
-            data_in  => data_in.data(11 downto 0),
+            data_in  => data_in.data(15 downto 0),
             sel      => d_bit_count,
             data_out => d_truncated_value
         );
 
-    control_unit : entity work.control_unit
+    control_unit : entity work.pd_asp_control_unit
         port map(
             clock                         => clock,
             d_peak_detected               => d_peak_detected,
@@ -143,7 +143,7 @@ begin
             message_out    => d_selected_message
         );
 
-    send_buffer : entity work.register_buffer
+    send_buffer : entity work.pd_asp_register_buffer
         generic map(
             width => 40
         )

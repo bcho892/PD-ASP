@@ -23,7 +23,7 @@ architecture rtl of config_registers is
 begin
     config_reset <= packet(15);
 
-    destination_config_register : entity work.register_buffer
+    destination_config_register : entity work.pd_asp_register_buffer
         generic map(
             width => 4
         )
@@ -35,7 +35,7 @@ begin
             data_out     => destination
         );
 
-    next_config_register : entity work.register_buffer
+    next_config_register : entity work.pd_asp_register_buffer
         generic map(
             width => 4
         )
@@ -47,7 +47,7 @@ begin
             data_out     => next_address
         );
 
-    bit_count_register : entity work.register_buffer
+    bit_count_register : entity work.pd_asp_register_buffer
         generic map(
             width => 2
         )
@@ -59,7 +59,7 @@ begin
             data_out     => bit_count
         );
 
-    enable_register : entity work.register_buffer
+    enable_register : entity work.pd_asp_register_buffer
         generic map(
             width => 1
         )

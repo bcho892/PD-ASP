@@ -22,7 +22,7 @@ architecture rtl of testbench_control_unit is
     signal t_c_write_correlation_registers : std_logic;
     signal t_c_write_config_registers      : std_logic;
 begin
-    DUT : entity work.control_unit
+    DUT : entity work.pd_asp_control_unit
         port map(
             clock                         => t_clock,
             d_peak_detected               => t_d_slope_changed,

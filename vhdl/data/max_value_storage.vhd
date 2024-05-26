@@ -28,7 +28,7 @@ begin
             a_greater_than_b => new_max_value_found
         );
 
-    max_value_register : entity work.register_buffer
+    max_value_register : entity work.pd_asp_register_buffer
         generic map(
             width => BiglariTypes.data_max_width
         )
