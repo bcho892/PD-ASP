@@ -4,15 +4,14 @@ use ieee.numeric_std.all;
 use work.ZoranTypes;
 use work.BiglariTypes;
 use work.MuxConstants;
-use work.TdmaMinTypes;
 
 entity top_level_pd_asp is
 
     port (
         clock    : in  std_logic;
         reset    : in  std_logic;
-        data_in  : in  TdmaMinTypes.tdma_min_port;
-        data_out : out TdmaMinTypes.tdma_min_port
+        data_in  : in  ZoranTypes.mips_tdma_min_port;
+        data_out : out ZoranTypes.mips_tdma_min_port
     );
 end entity;
 
