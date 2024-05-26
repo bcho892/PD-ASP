@@ -10,8 +10,8 @@ end entity;
 architecture rtl of testbench_top_level_pd_asp is
     signal t_clock    : std_logic;
     signal t_reset    : std_logic;
-    signal t_data_in  : ZoranTypes.tdma_min_port;
-    signal t_data_out : ZoranTypes.tdma_min_port;
+    signal t_data_in  : ZoranTypes.mips_tdma_min_port;
+    signal t_data_out : ZoranTypes.mips_tdma_min_port;
 begin
     top_level_inst : entity work.top_level_pd_asp
         port map(
