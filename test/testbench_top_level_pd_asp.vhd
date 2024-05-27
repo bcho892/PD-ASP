@@ -34,7 +34,7 @@ begin
         -- enable the PD
         wait until rising_edge(t_clock);
         t_data_in.addr <= x"FF";
-        t_data_in.data <= NocConstants.pd_config_code & x"FFF7FFF";
+        t_data_in.data <= NocConstants.pd_config_code & x"FFE7FFF";
         wait until rising_edge(t_clock);
         t_data_in.data <= NocConstants.average_data_code & x"0000420";
         wait until rising_edge(t_clock);
@@ -146,7 +146,7 @@ begin
             severity error;
 
         t_reset        <= '0';
-        t_data_in.data <= NocConstants.pd_config_code & x"FFF7FFF";
+        t_data_in.data <= NocConstants.pd_config_code & x"FFE7FFF";
         -- reconfigure
         wait until rising_edge(t_clock);
         -- undo reset and previous should work

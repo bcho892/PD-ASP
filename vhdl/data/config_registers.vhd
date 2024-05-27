@@ -12,6 +12,7 @@ entity config_registers is
         packet        : in  ZoranTypes.tdma_min_data;
         destination   : out std_logic_vector(3 downto 0);
         next_address  : out std_logic_vector(3 downto 0);
+        pass_through  : out std_logic;
         bit_count     : out MuxConstants.bit_select_width;
         config_enable : out std_logic;
         config_reset  : out std_logic
@@ -70,4 +71,17 @@ begin
             data_in      => packet(17 downto 17),
             data_out(0)  => config_enable
         );
+
+    pass_through_register : entity work.pd_asp_register_buffer
+        generic map(
+            width => 1
+        )
+        port map(
+            clock        => clock,
+            reset        => reset,
+            write_enable => enable,
+            data_in      => packet(16 downto 16),
+            data_out(0)  => pass_through
+        );
+
 end architecture;

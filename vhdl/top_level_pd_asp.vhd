@@ -27,6 +27,7 @@ architecture rtl of top_level_pd_asp is
     signal d_bit_count                   : MuxConstants.bit_select_width;
     signal d_config_enable               : std_logic;
     signal d_config_reset                : std_logic;
+    signal d_pass_through                : std_logic;
 
     signal d_is_config                   : std_logic;
 
@@ -35,6 +36,8 @@ architecture rtl of top_level_pd_asp is
     signal d_counter_value               : BiglariTypes.counter_width;
     signal d_truncated_value             : BiglariTypes.data_width;
     signal d_selected_message            : ZoranTypes.tdma_min_data;
+
+    signal d_send_buffer_out             : ZoranTypes.mips_tdma_min_port;
 
     signal c_wipe_data_registers         : std_logic;
     signal c_write_send_register         : std_logic;
@@ -46,6 +49,9 @@ architecture rtl of top_level_pd_asp is
     signal c_write_config_registers      : std_logic;
 
 begin
+
+    with d_pass_through select data_out <= data_in when '1',
+                                           d_send_buffer_out when others;
 
     with d_packet_type select d_is_config <= '1' when BiglariTypes.config,
                                              '0' when others;
@@ -69,7 +75,8 @@ begin
             next_address  => d_next_address,
             bit_count     => d_bit_count,
             config_enable => d_config_enable,
-            config_reset  => d_config_reset
+            config_reset  => d_config_reset,
+            pass_through  => d_pass_through
         );
 
     data_truncation_mux : entity work.bit_truncation
@@ -153,8 +160,8 @@ begin
             write_enable           => c_write_send_register,
             data_in(39 downto 32)  => d_padded_next_address,
             data_in(31 downto 0)   => d_selected_message,
-            data_out(39 downto 32) => data_out.addr,
-            data_out(31 downto 0)  => data_out.data
+            data_out(39 downto 32) => d_send_buffer_out.addr,
+            data_out(31 downto 0)  => d_send_buffer_out.data
         );
 
 end architecture;
