@@ -30,6 +30,7 @@ architecture rtl of top_level_pd_asp is
     signal d_pass_through                : std_logic;
 
     signal d_is_config                   : std_logic;
+    signal d_is_data                     : std_logic;
 
     signal d_min_value                   : BiglariTypes.data_width;
     signal d_max_value                   : BiglariTypes.data_width;
@@ -50,11 +51,19 @@ architecture rtl of top_level_pd_asp is
 
 begin
 
-    with d_pass_through and not d_is_config select data_out <= data_in when '1',
-                                                               d_send_buffer_out when others;
+    with d_pass_through and d_is_data select data_out.data <= data_in.data when '1',
+                                                              d_send_buffer_out.data when others;
+
+    data_out.addr                         <= d_send_buffer_out.addr;
 
     with d_packet_type select d_is_config <= '1' when BiglariTypes.config,
                                              '0' when others;
+
+    -- when we pass through we only care about forwarding from the previous stage i.e from the CORE
+    with d_packet_type select d_is_data <= '0' when BiglariTypes.average_data,
+                                           '1' when BiglariTypes.correlation_data,
+                                           '0' when others;
+
     d_reset               <= (d_config_reset and (d_is_config)) or reset;
     d_enable              <= d_config_enable;
     d_padded_next_address <= "0000" & d_next_address;
