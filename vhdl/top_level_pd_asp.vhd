@@ -39,6 +39,7 @@ architecture rtl of top_level_pd_asp is
     signal d_selected_message            : ZoranTypes.tdma_min_data;
 
     signal d_send_buffer_out             : ZoranTypes.mips_tdma_min_port;
+    signal d_pass_through_data           : ZoranTypes.mips_tdma_min_port;
 
     signal c_wipe_data_registers         : std_logic;
     signal c_write_send_register         : std_logic;
@@ -51,8 +52,11 @@ architecture rtl of top_level_pd_asp is
 
 begin
 
-    with d_pass_through and d_is_data select data_out.data <= data_in.data when '1',
-                                                              d_send_buffer_out.data when others;
+    with d_is_data select d_pass_through_data.data <= data_in.data when '1',
+                                                      d_send_buffer_out.data when others;
+
+    with d_pass_through select data_out.data <= d_pass_through_data.data when '1',
+                                                d_send_buffer_out.data when others;
 
     data_out.addr                         <= d_send_buffer_out.addr;
 
