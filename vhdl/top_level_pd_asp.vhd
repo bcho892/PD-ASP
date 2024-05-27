@@ -50,8 +50,8 @@ architecture rtl of top_level_pd_asp is
 
 begin
 
-    with d_pass_through select data_out <= data_in when '1',
-                                           d_send_buffer_out when others;
+    with d_pass_through and not d_is_config select data_out <= data_in when '1',
+                                                               d_send_buffer_out when others;
 
     with d_packet_type select d_is_config <= '1' when BiglariTypes.config,
                                              '0' when others;
