@@ -129,7 +129,7 @@ begin
         port map(
             clock    => clock,
             reset    => c_wipe_data_registers,
-            enable   => c_write_correlation_registers,
+            enable   => d_config_enable,
             data_out => d_counter_value
         );
 
