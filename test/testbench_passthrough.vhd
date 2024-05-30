@@ -47,5 +47,8 @@ begin
         t_data_in.data <= NocConstants.average_data_code & x"6969696";
         wait until rising_edge(t_clock);
         t_data_in.data <= NocConstants.average_data_code & x"9A9A9A9";
+        wait until rising_edge(t_clock);
+        t_data_in.data <= NocConstants.correlation_code & x"6A9A9A9";
+        wait;
     end process;
 end architecture;
