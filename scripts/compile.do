@@ -29,6 +29,7 @@ set library_file_list {
                                            ../test/testbench_peak_detection.vhd
                                            ../test/testbench_counter.vhd
                                            ../test/testbench_top_level_pd_asp.vhd
+                                           ../test/testbench_passthrough.vhd
                            }
 }
 

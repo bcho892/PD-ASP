@@ -12,7 +12,7 @@ architecture rtl of testbench_peak_detection is
     signal t_enable           : std_logic               := '1';
     signal t_reset            : std_logic               := '0';
     signal t_data_reset       : std_logic               := '0';
-    signal t_correlation_data : BiglariTypes.data_width := x"00000";
+    signal t_correlation_data : BiglariTypes.data_width := (others => '0');
     signal t_peak_detected    : std_logic;
 begin
     peak_detection_inst : entity work.peak_detection
@@ -43,59 +43,59 @@ begin
         assert t_peak_detected = '0' report "RESET NOT RESETING" severity error;
 
         t_reset            <= '0';
-        t_correlation_data <= x"00069";
+        t_correlation_data <= x"0000069";
 
         wait until rising_edge(t_clock);
         assert t_peak_detected = '0' report "PEAK DETECTED WHEN NO SWITCH" severity error;
-        t_correlation_data <= x"00069";
+        t_correlation_data <= x"0000069";
 
         wait until rising_edge(t_clock);
         assert t_peak_detected = '0' report "PEAK DETECTED WHEN NO SWITCH" severity error;
-        t_correlation_data <= x"00420";
+        t_correlation_data <= x"0000420";
 
         wait until rising_edge(t_clock);
         assert t_peak_detected = '0' report "PEAK DETECTED WHEN NO SWITCH" severity error;
-        t_correlation_data <= x"00666";
+        t_correlation_data <= x"0000666";
 
         wait until rising_edge(t_clock);
-        t_correlation_data <= x"00069";
-        assert t_peak_detected = '0' report "PEAK DETECTED WHEN NO SWITCH" severity error;
-
-        wait until rising_edge(t_clock);
-        assert t_peak_detected = '1' report "PEAK NOT DETECTED ON SWITCH" severity error;
-
-        wait until rising_edge(t_clock);
-        t_correlation_data <= x"00069";
-        assert t_peak_detected = '0' report "PEAK DETECTED WHEN NO SWITCH" severity error;
-
-        wait until rising_edge(t_clock);
-        t_correlation_data <= x"00420";
-        assert t_peak_detected = '0' report "PEAK DETECTED WHEN NO SWITCH" severity error;
-
-        wait until rising_edge(t_clock);
-        t_correlation_data <= x"00666";
-        assert t_peak_detected = '0' report "PEAK DETECTED WHEN NO SWITCH" severity error;
-
-        wait until rising_edge(t_clock);
-        t_correlation_data <= x"00696";
-        assert t_peak_detected = '0' report "PEAK DETECTED WHEN NO SWITCH" severity error;
-
-        wait until rising_edge(t_clock);
-        t_correlation_data <= x"00420";
+        t_correlation_data <= x"0000069";
         assert t_peak_detected = '0' report "PEAK DETECTED WHEN NO SWITCH" severity error;
 
         wait until rising_edge(t_clock);
         assert t_peak_detected = '1' report "PEAK NOT DETECTED ON SWITCH" severity error;
-        t_correlation_data <= x"00420";
+
+        wait until rising_edge(t_clock);
+        t_correlation_data <= x"0000069";
+        assert t_peak_detected = '0' report "PEAK DETECTED WHEN NO SWITCH" severity error;
+
+        wait until rising_edge(t_clock);
+        t_correlation_data <= x"0000420";
+        assert t_peak_detected = '0' report "PEAK DETECTED WHEN NO SWITCH" severity error;
+
+        wait until rising_edge(t_clock);
+        t_correlation_data <= x"0000666";
+        assert t_peak_detected = '0' report "PEAK DETECTED WHEN NO SWITCH" severity error;
+
+        wait until rising_edge(t_clock);
+        t_correlation_data <= x"0000696";
+        assert t_peak_detected = '0' report "PEAK DETECTED WHEN NO SWITCH" severity error;
+
+        wait until rising_edge(t_clock);
+        t_correlation_data <= x"0000420";
+        assert t_peak_detected = '0' report "PEAK DETECTED WHEN NO SWITCH" severity error;
+
+        wait until rising_edge(t_clock);
+        assert t_peak_detected = '1' report "PEAK NOT DETECTED ON SWITCH" severity error;
+        t_correlation_data <= x"0000420";
 
         wait until rising_edge(t_clock);
         assert t_peak_detected = '0' report "PEAK DETECTED WHEN NO SWITCH" severity error;
-        t_correlation_data <= x"00421";
+        t_correlation_data <= x"0000421";
         t_reset            <= '1';
 
         wait until rising_edge(t_clock);
         assert t_peak_detected = '0' report "PEAK DETECTED WHEN NO SWITCH" severity error;
-        t_correlation_data <= x"00420";
+        t_correlation_data <= x"0000420";
 
         wait until rising_edge(t_clock);
         assert t_peak_detected = '0' report "reset not working" severity error;

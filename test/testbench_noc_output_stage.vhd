@@ -13,8 +13,8 @@ architecture rtl of testbench_noc_output_stage is
     signal t_clock          : std_logic;
     signal t_reset          : std_logic                         := '0';
     signal t_enable         : std_logic                         := '1';
-    signal t_max_value      : BiglariTypes.data_width           := x"06696";
-    signal t_min_value      : BiglariTypes.data_width           := x"04420";
+    signal t_max_value      : BiglariTypes.data_width           := (others => '0');
+    signal t_min_value      : BiglariTypes.data_width           := (others => '0');
     signal t_counter_value  : BiglariTypes.counter_width        := to_unsigned(69, BiglariTypes.counter_max_width);
     signal t_message_select : MuxConstants.message_select_width := MuxConstants.no_message;
     signal t_message_out    : ZoranTypes.tdma_min_data;
