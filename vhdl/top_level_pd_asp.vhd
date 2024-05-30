@@ -64,7 +64,7 @@ begin
                                              '0' when others;
 
     -- when we pass through we only care about forwarding from the previous stage i.e from the CORE
-    with d_packet_type select d_is_data <= '0' when BiglariTypes.average_data,
+    with d_packet_type select d_is_data <= '1' when BiglariTypes.average_data,
                                            '1' when BiglariTypes.correlation_data,
                                            '0' when others;
 
