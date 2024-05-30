@@ -4,7 +4,7 @@ use ieee.numeric_std.all;
 
 package MuxConstants is
     subtype bit_select_width is std_logic_vector(1 downto 0);
-    constant bits_16 : bit_select_width := "00";
+    constant bits_28 : bit_select_width := "00";
     constant bits_10 : bit_select_width := "01";
     constant bits_8  : bit_select_width := "10";
 

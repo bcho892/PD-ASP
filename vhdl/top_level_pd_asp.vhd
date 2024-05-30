@@ -128,8 +128,8 @@ begin
     counter : entity work.counter
         port map(
             clock    => clock,
-            reset    => reset,
-            enable   => c_write_correlation_registers,
+            reset    => c_wipe_data_registers,
+            enable   => d_config_enable,
             data_out => d_counter_value
         );
 
