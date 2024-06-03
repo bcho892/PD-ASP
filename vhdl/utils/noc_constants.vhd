@@ -3,7 +3,7 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 package NocConstants is
-    constant average_data_code      : std_logic_vector(3 downto 0) := "1110";
+    constant average_data_code      : std_logic_vector(3 downto 0) := "1000";
     constant pd_config_code         : std_logic_vector(3 downto 0) := "1010";
     constant correlation_code       : std_logic_vector(3 downto 0) := "1001";
 
